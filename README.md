@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+📚 CS434AG: Nền Tảng Hỗ Trợ Học Tập Số (Trợ Lý Học Tập)
 
-## Getting Started
+Dự án này là một ứng dụng web được xây dựng bằng Next.js, nhằm cung cấp các công cụ thiết yếu hỗ trợ sinh viên quản lý lịch học, lịch thi, thống kê thời gian học tập và ghi chú cá nhân.
 
-First, run the development server:
+GitHub: DungDuyTran/CS434AG_CongCuVaPhuongPhap_Nentanghoctapso
 
-```bash
+1. 🎯 Cấu Trúc Dự Án và Phân Chia Công Việc
+
+Dự án được phân chia thành các module chính, mỗi thành viên phụ trách một phần:
+
+| Tên thành viên       | Module phụ trách               |
+| -------------------- | ------------------------------ |
+| **Trần Duy Dũng**    | **Lịch Học** (`/app/calender`) |
+| **Trần Huy Hoàng**   | **Thống Kê** (`/app/thongKe`)  |
+| **Nguyễn Duy Nghĩa** | **Lịch Thi** (`/app/lichThi`)  |
+| **Hà Phước Thịnh**   | **Ghi Chú** (`/app/ghiChu`)    |
+
+2. ⚙️ Thiết Lập và Khởi Động Dự Án
+
+2.1. Cài đặt Dependencies
+
+Trước tiên, bạn cần đảm bảo Node.js và npm/yarn đã được cài đặt. Sau đó, chạy lệnh sau để tải về tất cả các thư viện cần thiết:
+
+npm install
+
+# hoặc
+
+yarn install
+
+2.2. Khởi động Development Server
+
+Chạy lệnh dưới đây để khởi động máy chủ phát triển cục bộ (local development server):
+
 npm run dev
-# or
+
+# hoặc
+
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Ứng dụng sẽ chạy tại địa chỉ: http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. 🤝 Quy Trình Hợp Tác (Git Workflow)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Để đảm bảo quá trình phát triển đồng bộ và tránh lỗi non-fast-forward khi đẩy code, vui lòng tuân thủ quy trình sau:
 
-## Learn More
+3.1. Kéo mã mới nhất (Luôn làm bước này đầu tiên)
 
-To learn more about Next.js, take a look at the following resources:
+Trước khi bắt đầu làm việc hoặc đẩy code lên remote, luôn kéo mã mới nhất từ nhánh main về máy cục bộ.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+git pull
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3.2. Commit và Đẩy thay đổi
 
-## Deploy on Vercel
+Sau khi hoàn tất tính năng hoặc sửa lỗi, hãy thêm (add) và commit các thay đổi của bạn:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Thêm tất cả các file đã thay đổi/mới
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+git add .
+
+# Thực hiện commit với thông điệp rõ ràng
+
+git commit -m "feat: Thêm tính năng [Tên tính năng]"
+
+# Đẩy các thay đổi đã commit lên GitHub
+
+git push
