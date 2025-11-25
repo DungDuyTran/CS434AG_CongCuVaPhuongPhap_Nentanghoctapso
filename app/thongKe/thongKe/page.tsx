@@ -9,7 +9,7 @@ import {
   Legend,
   ResponsiveContainer,
   AreaChart,
-  Area, // Changed to AreaChart and Area
+  Area,
 } from "recharts";
 import {
   Book,
@@ -25,7 +25,7 @@ interface LichHocRecord {
   id: number;
   startTime: string;
   endTime: string | null;
-  duration: number | null;
+  duration: number | null; // Tính bằng giây
   userId?: string | null;
   subject?: string | null;
   note?: string | null;
@@ -33,23 +33,80 @@ interface LichHocRecord {
 
 interface DailyStudySummary {
   date: string;
-  totalDuration: number;
+  totalDuration: number; // Tính bằng giờ
 }
 
 interface WeeklyStudySummary {
   week: string;
-  totalDuration: number;
+  totalDuration: number; // Tính bằng giờ
 }
 
 interface MonthlyStudySummary {
   month: string;
-  totalDuration: number;
+  totalDuration: number; // Tính bằng giờ
 }
 
 interface YearlyStudySummary {
   year: string;
-  totalDuration: number;
+  totalDuration: number; // Tính bằng giờ
 }
+
+// =========================================================
+// MOCK DATA (DỮ LIỆU ẢO) ĐỂ KHẮC PHỤC LỖI 404
+// =========================================================
+
+const MOCK_RECORDS: LichHocRecord[] = [
+  {
+    id: 1,
+    startTime: "2025-11-20T08:00:00.000Z",
+    endTime: "2025-11-20T10:00:00.000Z",
+    duration: 7200, // 2 giờ
+    subject: "Toán cao cấp",
+    note: "Ôn tập tích phân",
+  },
+  {
+    id: 2,
+    startTime: "2025-11-20T14:30:00.000Z",
+    endTime: "2025-11-20T16:00:00.000Z",
+    duration: 5400, // 1.5 giờ
+    subject: "Lập trình Web",
+    note: "Học React Hooks",
+  },
+  {
+    id: 3,
+    startTime: "2025-11-21T09:00:00.000Z",
+    endTime: "2025-11-21T12:00:00.000Z",
+    duration: 10800, // 3 giờ
+    subject: "Vật lý đại cương",
+    note: "Giải bài tập cơ học",
+  },
+  {
+    id: 4,
+    startTime: "2025-11-22T20:00:00.000Z",
+    endTime: "2025-11-22T20:45:00.000Z",
+    duration: 2700, // 0.75 giờ (45 phút)
+    subject: "Luyện tiếng Anh",
+    note: "Nghe BBC Learning English",
+  },
+  {
+    id: 5,
+    startTime: "2025-11-24T18:00:00.000Z",
+    endTime: "2025-11-24T19:30:00.000Z",
+    duration: 5400, // 1.5 giờ
+    subject: "Đồ án tốt nghiệp",
+    note: "Thiết kế cơ sở dữ liệu",
+  },
+  {
+    id: 6,
+    startTime: "2025-11-25T10:00:00.000Z",
+    endTime: "2025-11-25T11:00:00.000Z",
+    duration: 3600, // 1 giờ
+    subject: "Toán cao cấp",
+    note: "Hệ phương trình",
+  },
+];
+
+// =========================================================
 
 export default function LichHocTrackerApp() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -69,6 +126,7 @@ export default function LichHocTrackerApp() {
     "daily" | "weekly" | "monthly" | "yearly"
   >("daily");
 
+  // Hằng số API được giữ lại để dùng sau này, nhưng không được sử dụng ngay bây giờ
   const LICHHOC_API_URL = "http://localhost:3000/api/lichHocRecord";
   const MOCK_USER_ID = "user123";
 
@@ -85,16 +143,20 @@ export default function LichHocTrackerApp() {
   const fetchStudyRecords = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${LICHHOC_API_URL}?userId=${MOCK_USER_ID}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const result = await response.json();
-      const records: LichHocRecord[] = result.data;
+      // ⚠️ Dùng dữ liệu ảo thay vì gọi fetch API để tránh lỗi 404
+      await new Promise((resolve) => setTimeout(resolve, 500)); // Mô phỏng độ trễ
+      const records: LichHocRecord[] = MOCK_RECORDS;
+      // const response = await fetch(`${LICHHOC_API_URL}?userId=${MOCK_USER_ID}`);
+      // if (!response.ok) {
+      //   throw new Error(`HTTP error! status: ${response.status}`);
+      // }
+      // const result = await response.json();
+      // const records: LichHocRecord[] = result.data;
+
       setStudyRecords(records);
       calculateSummaries(records);
-      showNotification("Tải dữ liệu thành công!", "success");
-    } catch (error: any) {
+      showNotification("Tải dữ liệu (Mock) thành công!", "success");
+    } catch (error) {
       console.error("Lỗi khi tải bản ghi lịch học:", error);
       showNotification(`Lỗi tải dữ liệu: ${(error as Error).message}`, "error");
     } finally {
@@ -117,9 +179,11 @@ export default function LichHocTrackerApp() {
         const startDate = new Date(record.startTime);
         const durationHours = record.duration / 3600;
 
+        // Tính theo ngày
         const dateKey = startDate.toISOString().split("T")[0];
         dailyMap[dateKey] = (dailyMap[dateKey] || 0) + durationHours;
 
+        // Tính theo tuần (Tuần bắt đầu từ thứ Hai)
         const startOfWeek = new Date(startDate);
         startOfWeek.setDate(
           startDate.getDate() - ((startDate.getDay() + 6) % 7)
@@ -134,9 +198,11 @@ export default function LichHocTrackerApp() {
           .padStart(2, "0")}`;
         weeklyMap[weekKey] = (weeklyMap[weekKey] || 0) + durationHours;
 
+        // Tính theo tháng
         const monthKey = startDate.toISOString().slice(0, 7);
         monthlyMap[monthKey] = (monthlyMap[monthKey] || 0) + durationHours;
 
+        // Tính theo năm
         const yearKey = String(startDate.getFullYear());
         yearlyMap[yearKey] = (yearlyMap[yearKey] || 0) + durationHours;
       }
@@ -335,7 +401,7 @@ export default function LichHocTrackerApp() {
                 </div>
                 <div className="w-full h-96">
                   <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart // Changed from BarChart
+                    <AreaChart
                       data={getChartData()}
                       margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                     >
@@ -355,12 +421,6 @@ export default function LichHocTrackerApp() {
                           `${value} giờ`,
                           "Thời gian học",
                         ]}
-                        labelFormatter={(label: any) => {
-                          if (chartType === "weekly") return `Tuần: ${label}`;
-                          if (chartType === "monthly") return `Tháng: ${label}`;
-                          if (chartType === "yearly") return `Năm: ${label}`;
-                          return `Ngày: ${label}`;
-                        }}
                         contentStyle={{
                           backgroundColor: "#2d3748",
                           borderColor: "#4a5568",
@@ -376,7 +436,6 @@ export default function LichHocTrackerApp() {
                         fill="#8884d8"
                         name="Thời gian học"
                       />{" "}
-                      {/* Changed from Bar to Area */}
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
@@ -415,6 +474,12 @@ export default function LichHocTrackerApp() {
                       ? new Date(record.endTime).toLocaleString("vi-VN")
                       : "Đang học"}
                   </p>
+                  {record.subject && (
+                    <p className="text-base font-semibold text-green-300">
+                      <Book size={16} className="inline-block mr-1" />
+                      {record.subject}
+                    </p>
+                  )}
                   {record.duration !== null && (
                     <p className="text-sm text-gray-400">
                       ⏰ Thời lượng: {formatTime(record.duration)}
