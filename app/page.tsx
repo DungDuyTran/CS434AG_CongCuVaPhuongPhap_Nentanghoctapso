@@ -19,7 +19,7 @@ export default function Home() {
       {/* ⭐ Nút Lịch thi */}
       <div>
         <button
-          onClick={() => router.push("/lichThi")}
+          onClick={() => router.push("lichThi")}
           className="bg-rose-600 hover:bg-rose-700 text-white mb-5 w-[120px] h-[50px]"
         >
           Lịch thi
@@ -29,7 +29,7 @@ export default function Home() {
       {/* Nút Thống kê */}
       <div>
         <button
-          onClick={() => router.push("/calender/schedulePage")}
+          onClick={() => router.push("/thongKe/thongKe")}
           className="bg-blue-600 hover:bg-blue-700 text-white mb-5 w-[120px] h-[50px]"
         >
           Thống kê
